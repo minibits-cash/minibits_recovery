@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ---- Font face declarations ---- */
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/font/JetBrainsMono.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- IBM Plex Mono utility classes ---- */
+
+.ibm-plex-mono-thin        { font-family: "IBM Plex Mono", monospace; font-weight: 100; font-style: normal; }
+.ibm-plex-mono-extralight  { font-family: "IBM Plex Mono", monospace; font-weight: 200; font-style: normal; }
+.ibm-plex-mono-light       { font-family: "IBM Plex Mono", monospace; font-weight: 300; font-style: normal; }
+.ibm-plex-mono-regular     { font-family: "IBM Plex Mono", monospace; font-weight: 400; font-style: normal; }
+.ibm-plex-mono-medium      { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-style: normal; }
+.ibm-plex-mono-semibold    { font-family: "IBM Plex Mono", monospace; font-weight: 600; font-style: normal; }
+.ibm-plex-mono-bold        { font-family: "IBM Plex Mono", monospace; font-weight: 700; font-style: normal; }
+
+/* ---- Karla utility classes ---- */
+
+.karla-thin      { font-family: "Karla", sans-serif; font-optical-sizing: auto; font-weight: 200; font-style: normal; }
+.karla-light     { font-family: "Karla", sans-serif; font-optical-sizing: auto; font-weight: 300; font-style: normal; }
+.karla-regular   { font-family: "Karla", sans-serif; font-optical-sizing: auto; font-weight: 400; font-style: normal; }
+.karla-medium    { font-family: "Karla", sans-serif; font-optical-sizing: auto; font-weight: 500; font-style: normal; }
+.karla-semibold  { font-family: "Karla", sans-serif; font-optical-sizing: auto; font-weight: 600; font-style: normal; }
+.karla-bold      { font-family: "Karla", sans-serif; font-optical-sizing: auto; font-weight: 700; font-style: normal; }
+.karla-extrabold { font-family: "Karla", sans-serif; font-optical-sizing: auto; font-weight: 800; font-style: normal; }
+
+/* ---- Gradient text ---- */
+
+.gradientText {
+  @apply bg-gradient-to-r from-violet-500 via-indigo-700 to-purple-500 bg-clip-text tracking-tight text-transparent;
+}
+
+/* ---- Animated grid hero background ---- */
+
+.animated-grid-bg {
+  position: relative;
+  background-color: white;
+  overflow: hidden;
+}
+
+.animated-grid-bg::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    linear-gradient(to right, rgba(224, 224, 224, 0.5) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(224, 224, 224, 0.5) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.7;
+}
+
+.animated-grid-bg .text-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 40px);
+  grid-template-rows: repeat(auto-fill, 40px);
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: rgba(160, 160, 160, 0.5);
+}
+
+.animated-grid-bg .text-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.animated-grid-bg .gradient-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0.7) 75%,
+    rgba(255, 255, 255, 0.9) 85%,
+    white 100%
+  );
+  pointer-events: none;
+}
+
+/* ---- Misc animations ---- */
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
