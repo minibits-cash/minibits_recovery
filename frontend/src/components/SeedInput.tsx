@@ -67,7 +67,7 @@ const SeedInput = ({ value, onChange }: SeedInputProps) => {
       )}
 
       <p className="mt-2 font-ibm-plex-mono text-xs text-gray-400">
-        Your seed phrase is processed entirely in your browser and is never sent to the server.
+        Your seed phrase is used to pre-generate blinded messages and is never sent to the server.
       </p>
     </div>
   )

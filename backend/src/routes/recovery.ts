@@ -2,7 +2,6 @@ import type { FastifyPluginAsync } from 'fastify'
 import { v4 as uuidv4 } from 'uuid'
 import type { JobState, RecoveryRequest } from '../types/index'
 import { runRecovery } from '../services/recoveryService'
-import { sendAll } from '../services/ipponService'
 import { log } from '../services/logService'
 import AppError, { Err } from '../utils/AppError'
 import { paymentGuard } from '../handlers/paymentGuard'
@@ -112,44 +111,6 @@ const recoveryRoutes: FastifyPluginAsync = async (app) => {
     }
   })
 
-  // POST /api/recovery/:jobId/sweep
-  app.post<{ Params: { jobId: string } }>('/:jobId/sweep', {
-    config: {
-      rateLimit: {
-        max: parseInt(process.env.RATE_LIMIT_RECOVERY_MAX || '5'),
-        timeWindow: process.env.RATE_LIMIT_WINDOW || '1 minute',
-      },
-    },
-  }, async (request) => {
-    const job = jobs.get(request.params.jobId)
-    if (!job) {
-      throw new AppError(404, Err.NOTFOUND_ERROR, 'Job not found', {
-        caller: 'POST /api/recovery/:jobId/sweep',
-        jobId: request.params.jobId,
-      })
-    }
-    if (job.status !== 'COMPLETED' || !job.result?.accessKey) {
-      throw new AppError(400, Err.VALIDATION_ERROR, 'Job not completed or no wallet to sweep', {
-        caller: 'POST /api/recovery/:jobId/sweep',
-        jobId: request.params.jobId,
-        status: job.status,
-      })
-    }
-    if (job.result.balance === 0) {
-      throw new AppError(400, Err.VALIDATION_ERROR, 'Wallet balance is 0, nothing to sweep', {
-        caller: 'POST /api/recovery/:jobId/sweep',
-        jobId: request.params.jobId,
-      })
-    }
-
-    log.info('[POST /api/recovery/:jobId/sweep] Sweeping wallet', {
-      jobId: request.params.jobId,
-      walletName: job.result.walletName,
-    })
-
-    const { token } = await sendAll(job.result.accessKey)
-    return { token }
-  })
 }
 
 export default recoveryRoutes

@@ -118,6 +118,7 @@ export default function RecoveryFlow() {
       id: attemptId,
       mintUrl,
       keysetId: selectedKeyset.id,
+      unit: selectedKeyset.unit,
       startCounter,
       jobId,
       status: 'IN_PROGRESS',
@@ -160,6 +161,7 @@ export default function RecoveryFlow() {
       id: attemptId,
       mintUrl: pendingRequest.mintUrl,
       keysetId: pendingRequest.keysetId,
+      unit: pendingRequest.keyset.unit,
       startCounter,
       jobId,
       status: 'IN_PROGRESS',
@@ -190,8 +192,8 @@ export default function RecoveryFlow() {
       setActiveAttempt(null)
 
       // If recovered something, advance start counter for next attempt
-      if (pollResult.result && pollResult.result.lastCounter > startCounter) {
-        setStartCounter(pollResult.result.lastCounter + 1)
+      if (pollResult.result && pollResult.result.scannedToCounter > startCounter) {
+        setStartCounter(pollResult.result.scannedToCounter + 1)
       }
     },
     [activeAttempt, startCounter],
@@ -200,6 +202,7 @@ export default function RecoveryFlow() {
   function handleRetry() {
     setActiveJobId(null)
     setActiveAttempt(null)
+    setShowAdvanced(true)
   }
 
   return (

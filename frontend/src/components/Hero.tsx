@@ -52,7 +52,7 @@ const Hero = () => {
 
   return (
     <div className="mt-16">
-      <div className="relative w-full px-4 py-10 sm:px-6 lg:px-8">
+      <div className="relative w-full px-4 pt-10 sm:px-6 lg:px-8">
         <div className="animated-grid-bg relative mx-auto max-w-7xl overflow-hidden rounded-lg">
           <div className="text-overlay" ref={textOverlayRef}>
             {Array(400)

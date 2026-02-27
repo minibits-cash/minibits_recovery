@@ -3,7 +3,6 @@ import { getEncodedTokenV4, hashToCurve, ProofState } from '@cashu/cashu-ts'
 import type { RecoveryRequest, JobResult, SerializedOutput } from '../types/index'
 import { log } from './logService'
 import AppError, { Err } from '../utils/AppError'
-import * as ippon from './ipponService'
 
 interface SerializedBlindedSignature {
   id: string
@@ -97,7 +96,7 @@ async function checkProofStates(mintUrl: string, proofs: Proof[]): Promise<Proof
   }
 
   const unspent = proofs.filter((_, idx) => stateMap.get(proofYs[idx]) === 'UNSPENT')
-  log.info('[checkProofStates] Unspent proofs found', { total: proofs.length, unspent: unspent.length })
+  log.info('[checkProofStates] Unspent proofs check result', { total: proofs.length, unspent: unspent.length })
   return unspent
 }
 
@@ -116,11 +115,15 @@ export async function runRecovery(req: RecoveryRequest, jobId: string): Promise<
   })
 
   const allRecoveredProofs: Proof[] = []
-  let lastCounter = batches[0]?.counter ?? 0
+  let scannedToCounter = 0
+  let lastFoundCounter = 0
   let emptyBatchesFound = 0
   let exhausted = false
 
   for (const batch of batches) {
+    // Track the last scanned counter position (last output index in this batch)
+    scannedToCounter = batch.counter + batch.outputs.length - 1
+
     const blindedMessages = batch.outputs.map((o) => o.blindedMessage)
     const { outputs: matchedOutputs, signatures } = await mintRecovery(mintUrl, blindedMessages)
 
@@ -141,9 +144,11 @@ export async function runRecovery(req: RecoveryRequest, jobId: string): Promise<
     }
 
     let batchHadSignature = false
+
     for (let i = 0; i < batch.outputs.length; i++) {
       const output = batch.outputs[i]
       const sig = sigMap.get(output.blindedMessage.B_)
+
       if (sig) {
         const mintPubkey = keyset.keys[sig.amount.toString()]
         if (!mintPubkey) {
@@ -156,7 +161,8 @@ export async function runRecovery(req: RecoveryRequest, jobId: string): Promise<
         }
         const proof = constructProof(output, sig, mintPubkey)
         allRecoveredProofs.push(proof)
-        lastCounter = batch.counter + i
+        // Absolute counter position of this signature
+        lastFoundCounter = batch.counter + i
         batchHadSignature = true
       }
     }
@@ -183,22 +189,31 @@ export async function runRecovery(req: RecoveryRequest, jobId: string): Promise<
     exhausted = true
     log.warn('[runRecovery] All batches exhausted before gap limit — more proofs may exist', {
       jobId,
-      lastCounter,
+      scannedToCounter,
       batches: batches.length,
     })
   }
+
+  const totalRecoveredProofs = allRecoveredProofs.length
+  // No empty batches after the last found signature = last found proof is in the last scanned batch
+  const lastFoundInLastBatch = lastFoundCounter > 0 && emptyBatchesFound === 0
 
   // Filter to unspent proofs only
   const unspentProofs = await checkProofStates(mintUrl, allRecoveredProofs)
 
   if (unspentProofs.length === 0) {
-    log.info('[runRecovery] No unspent proofs found', { jobId, lastCounter, exhausted })
-    return { proofs: 0, balance: 0, lastCounter, accessKey: '', walletName: '', exhausted }
+    log.info('[runRecovery] No unspent proofs found', { jobId, scannedToCounter, lastFoundCounter, exhausted })
+    return {
+      proofs: 0,
+      totalRecoveredProofs,
+      balance: 0,
+      scannedToCounter,
+      lastFoundCounter,
+      lastFoundInLastBatch,
+      token: '',
+      exhausted,
+    }
   }
-
-  // Create ippon wallet and fund it with recovered proofs
-  const wallet = await ippon.createWallet(`minibits-recovery-${jobId}`)
-  log.info('[runRecovery] Ippon wallet created', { jobId, walletName: wallet.name })
 
   const token = getEncodedTokenV4({
     mint: mintUrl,
@@ -208,17 +223,20 @@ export async function runRecovery(req: RecoveryRequest, jobId: string): Promise<
       secret: p.secret,
       C: p.C,
     })),
+    memo: `Minibits Recovery - ${jobId}`,
   })
 
-  const { balance } = await ippon.receiveToken(wallet.access_key, token)
-  log.info('[runRecovery] Token received into ippon wallet', { jobId, walletName: wallet.name, balance })
+  const balance = unspentProofs.reduce((sum, p) => sum + p.amount, 0)
+  log.info('[runRecovery] Token built', { jobId, proofs: unspentProofs.length, balance })
 
   return {
     proofs: unspentProofs.length,
+    totalRecoveredProofs,
     balance,
-    lastCounter,
-    accessKey: wallet.access_key,
-    walletName: wallet.name,
+    scannedToCounter,
+    lastFoundCounter,
+    lastFoundInLastBatch,
+    token,
     exhausted,
   }
 }

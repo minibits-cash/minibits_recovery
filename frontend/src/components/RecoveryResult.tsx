@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
-import { sweepWallet } from '@/lib/api'
+import { ipponCreateWallet, ipponSendAll } from '@/lib/api'
 import type { RecoveryAttempt } from '@/lib/types'
 import clsx from 'clsx'
+
+const RECOMMENDED_SWAP_LIMIT = parseInt(
+  process.env.NEXT_PUBLIC_RECOMMENDED_SWAP_LIMIT ?? '100',
+)
 
 interface RecoveryResultProps {
   attempt: RecoveryAttempt
@@ -10,11 +14,10 @@ interface RecoveryResultProps {
 
 const RecoveryResult = ({ attempt, onRetry }: RecoveryResultProps) => {
   const { status, result, error } = attempt
-  const [copied, setCopied] = useState(false)
-  const [sweeping, setSweeping] = useState(false)
-  const [token, setToken] = useState<string | null>(null)
+  const [displayToken, setDisplayToken] = useState(result?.token ?? '')
   const [tokenCopied, setTokenCopied] = useState(false)
-  const [sweepError, setSweepError] = useState<string | null>(null)
+  const [swapping, setSwapping] = useState(false)
+  const [swapError, setSwapError] = useState<string | null>(null)
 
   async function copyToClipboard(text: string, setFlag: (v: boolean) => void) {
     try {
@@ -22,21 +25,22 @@ const RecoveryResult = ({ attempt, onRetry }: RecoveryResultProps) => {
       setFlag(true)
       setTimeout(() => setFlag(false), 2000)
     } catch {
-      // fallback
+      // fallback: ignore
     }
   }
 
-  async function handleSweep() {
-    if (!result) return
-    setSweeping(true)
-    setSweepError(null)
+  async function handleSwap() {
+    if (!displayToken) return
+    setSwapping(true)
+    setSwapError(null)
     try {
-      const res = await sweepWallet(attempt.jobId)
-      setToken(res.token)
+      const { access_key } = await ipponCreateWallet(displayToken)
+      const { token: optimized } = await ipponSendAll(access_key)
+      setDisplayToken(optimized)
     } catch (e) {
-      setSweepError((e as Error).message)
+      setSwapError((e as Error).message)
     } finally {
-      setSweeping(false)
+      setSwapping(false)
     }
   }
 
@@ -77,103 +81,84 @@ const RecoveryResult = ({ attempt, onRetry }: RecoveryResultProps) => {
             result.balance > 0 ? 'text-green-700' : 'text-gray-500',
           )}
         >
-          {result.balance > 0 ? 'RECOVERY SUCCESSFUL' : 'NOTHING FOUND'}
+          {result.balance > 0
+            ? 'RECOVERY SUCCESSFUL'
+            : result.totalRecoveredProofs > 0
+              ? 'ONLY SPENT PROOFS FOUND'
+              : 'NOTHING FOUND'}
         </span>
         <span className="font-ibm-plex-mono text-xs text-gray-400">
           {new Date(attempt.startedAt).toLocaleTimeString()}
         </span>
       </div>
 
-      {/* Stats grid */}
-      <div className="mb-5 grid grid-cols-3 gap-4 text-center">
-        <div>
-          <p className="karla-bold text-2xl text-gray-900">{result.balance}</p>
-          <p className="font-ibm-plex-mono text-xs text-gray-500">sats recovered</p>
-        </div>
-        <div>
-          <p className="karla-bold text-2xl text-gray-900">{result.proofs}</p>
-          <p className="font-ibm-plex-mono text-xs text-gray-500">unspent proofs</p>
-        </div>
-        <div>
-          <p className="karla-bold text-2xl text-gray-900">{result.lastCounter}</p>
-          <p className="font-ibm-plex-mono text-xs text-gray-500">last counter</p>
-        </div>
+      {/* Primary stat — sats recovered */}
+      <div className="mb-5 text-center">
+        <p className="karla-bold text-3xl text-gray-900">
+          {result.balance}{' '}
+          <span className="text-xl font-normal text-gray-600">sat</span>
+        </p>
+        <p className="font-ibm-plex-mono text-sm text-gray-500">
+          recovered from {result.totalRecoveredProofs} proofs
+        </p>
       </div>
 
-      {result.exhausted && (
-        <p className="mb-4 rounded border border-amber-200 bg-amber-50 p-3 font-ibm-plex-mono text-xs text-amber-700">
-          All provided batches were scanned. If you believe more proofs exist, retry from counter{' '}
-          <strong>{result.lastCounter + 1}</strong>.
+      {/* Hint: more proofs may exist in the next batch range */}
+      {result.lastFoundInLastBatch && (
+        <p className="mb-4 rounded border border-blue-200 bg-blue-50 p-3 font-ibm-plex-mono text-xs text-blue-700">
+          Proofs were found in the last scanned batch. Further unspent proofs may exist — consider
+          continuing recovery from counter <strong>{result.scannedToCounter + 1}</strong>.
         </p>
       )}
 
-      <p className="mb-4 font-ibm-plex-mono text-xs text-gray-400">
-        Keyset: {attempt.keysetId} · Mint: {attempt.mintUrl}
+      {result.exhausted && !result.lastFoundInLastBatch && (
+        <p className="mb-4 rounded border border-amber-200 bg-amber-50 p-3 font-ibm-plex-mono text-xs text-amber-700">
+          All provided batches were scanned without reaching the gap limit. If you believe more
+          proofs exist, retry from counter <strong>{result.scannedToCounter + 1}</strong>.
+        </p>
+      )}
+
+      <p className="mb-4 font-ibm-plex-mono text-xs text-gray-400 text-center">
+        Keyset: {attempt.keysetId} · Counters scanned: {attempt.startCounter}–{result.scannedToCounter}
       </p>
 
       {result.balance > 0 && (
         <>
-          {/* Access key */}
+          {/* Token preview */}
           <div className="mb-4">
             <label className="ibm-plex-mono-medium mb-1 block text-[12px] tracking-[-0.01em] text-gray-500">
-              IPPON WALLET ACCESS KEY
+              CASHU TOKEN — copy and import into your wallet
             </label>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 truncate rounded bg-white px-3 py-2 font-ibm-plex-mono text-xs text-gray-800 shadow-inner">
-                {result.accessKey}
-              </code>
-              <button
-                onClick={() => copyToClipboard(result.accessKey, setCopied)}
-                className="flex-shrink-0 rounded bg-gray-100 px-3 py-2 font-ibm-plex-mono text-xs text-gray-700 transition hover:bg-gray-200"
-              >
-                {copied ? '✓ Copied' : 'Copy'}
-              </button>
-            </div>
-            <p className="mt-1 font-ibm-plex-mono text-xs text-gray-400">
-              Use this key to access your wallet at{' '}
-              <a
-                href="https://ippon.minibits.cash"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline"
-              >
-                ippon.minibits.cash
-              </a>
-            </p>
+            <textarea
+              readOnly
+              value={displayToken}
+              rows={3}
+              className="w-full resize-none rounded border border-gray-300 bg-white p-3 font-ibm-plex-mono text-xs text-gray-800 focus:outline-none"
+            />
+            <button
+              onClick={() => copyToClipboard(displayToken, setTokenCopied)}
+              className="mt-2 w-full rounded bg-green-600 px-4 py-2 font-ibm-plex-mono text-sm text-white transition hover:bg-green-700"
+            >
+              {tokenCopied ? '✓ Token Copied!' : 'COPY TOKEN'}
+            </button>
           </div>
 
-          {/* Sweep to token */}
-          {!token && (
-            <button
-              onClick={handleSweep}
-              disabled={sweeping}
-              className="mb-3 w-full bg-black px-4 py-3 font-ibm-plex-mono text-sm font-semibold text-white transition hover:bg-gray-800 disabled:opacity-60"
-            >
-              {sweeping ? 'SWEEPING…' : 'SWEEP TO CASHU TOKEN'}
-            </button>
-          )}
-
-          {sweepError && (
-            <p className="mb-3 font-ibm-plex-mono text-xs text-red-500">{sweepError}</p>
-          )}
-
-          {token && (
+          {/* Swap to optimal denominations */}
+          {result.proofs > RECOMMENDED_SWAP_LIMIT && (
             <div className="mb-4">
-              <label className="ibm-plex-mono-medium mb-1 block text-[12px] tracking-[-0.01em] text-gray-500">
-                CASHU TOKEN — copy and import into your wallet
-              </label>
-              <textarea
-                readOnly
-                value={token}
-                rows={4}
-                className="w-full resize-none rounded border border-gray-300 bg-white p-3 font-ibm-plex-mono text-xs text-gray-800 focus:outline-none"
-              />
               <button
-                onClick={() => copyToClipboard(token, setTokenCopied)}
-                className="mt-2 w-full rounded bg-gray-100 px-4 py-2 font-ibm-plex-mono text-sm text-gray-700 transition hover:bg-gray-200"
+                onClick={handleSwap}
+                disabled={swapping}
+                className="w-full bg-black px-4 py-3 font-ibm-plex-mono text-sm font-semibold text-white transition hover:bg-gray-800 disabled:opacity-60"
               >
-                {tokenCopied ? '✓ Token Copied!' : 'COPY TOKEN'}
+                {swapping ? 'SWAPPING…' : 'SWAP TO OPTIMAL DENOMINATIONS'}
               </button>
+              <p className="mt-1 font-ibm-plex-mono text-xs text-gray-400">
+                {result.proofs} proofs recovered — swapping consolidates them into fewer, optimal ecash notes.
+              </p>
+              {swapError && (
+                <p className="mt-2 font-ibm-plex-mono text-xs text-red-500">{swapError}</p>
+              )}
             </div>
           )}
         </>
@@ -183,7 +168,7 @@ const RecoveryResult = ({ attempt, onRetry }: RecoveryResultProps) => {
         onClick={onRetry}
         className="w-full border border-gray-300 px-4 py-2 font-ibm-plex-mono text-sm text-gray-600 transition hover:border-gray-400 hover:text-gray-800"
       >
-        RETRY WITH DIFFERENT SETTINGS
+        CONTINUE OR CHANGE SETTINGS
       </button>
     </div>
   )

@@ -51,8 +51,24 @@ const KeysetSelect = ({ mintUrl, selectedKeysetId, onKeysetChange }: KeysetSelec
 
   const selectedKeyset = keysets.find((k) => k.id === selectedKeysetId) ?? undefined
 
-  function handleSelect(keyset: MintKeyset) {
-    const keys = allKeys.find((k) => k.id === keyset.id)
+  async function handleSelect(keyset: MintKeyset) {
+    let keys = allKeys.find((k) => k.id === keyset.id)
+    if (!keys) {
+      // Inactive keysets are absent from /v1/keys — fetch them individually
+      try {
+        const res = await fetch(`${mintUrl}/v1/keys/${keyset.id}`)
+        if (res.ok) {
+          const data: { keysets: MintKeys[] } = await res.json()
+          const fetched = data.keysets.find((k) => k.id === keyset.id)
+          if (fetched) {
+            setAllKeys((prev) => [...prev, fetched])
+            keys = fetched
+          }
+        }
+      } catch {
+        // silent — keyset remains unselectable if keys can't be fetched
+      }
+    }
     if (keys) onKeysetChange(keys)
   }
 

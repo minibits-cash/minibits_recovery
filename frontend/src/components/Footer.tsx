@@ -10,7 +10,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center text-center">
           <div className="mb-4 flex items-center gap-2">
-            {LOGO_URL && (
+            {/*LOGO_URL && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={LOGO_URL}
@@ -20,7 +20,7 @@ const Footer = () => {
                 height={30}
                 className="rounded-md"
               />
-            )}
+            )*/}
             <span className="text-lg font-bold leading-none text-gray-900">
               {PROJECT_NAME}<span className="text-[#f18805]">.</span>{APP_NAME}
             </span>

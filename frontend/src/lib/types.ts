@@ -52,10 +52,14 @@ export interface RecoveryRequest {
 
 export interface JobResult {
   proofs: number
+  totalRecoveredProofs: number
   balance: number
-  lastCounter: number
-  accessKey: string
-  walletName: string
+  scannedToCounter: number
+  lastFoundCounter: number
+  /** True when the last scanned batch had signatures (no empty batches after last found proof) */
+  lastFoundInLastBatch: boolean
+  /** Encoded CashuV4 token containing unspent proofs; empty string when balance = 0 */
+  token: string
   exhausted: boolean
 }
 
@@ -77,6 +81,7 @@ export interface RecoveryAttempt {
   id: string
   mintUrl: string
   keysetId: string
+  unit: string
   startCounter: number
   jobId: string
   status: JobStatus
