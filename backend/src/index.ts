@@ -7,7 +7,7 @@ const app = await buildApp()
 app.listen(
   {
     host: '0.0.0.0',
-    port: parseInt(process.env.PORT ?? '3001'),
+    port: parseInt(process.env.PORT ?? '3003'),
   },
   (err: Error | null) => {
     if (err) {
@@ -15,7 +15,7 @@ app.listen(
       process.exit(1)
     }
     log.info('minibits-recovery backend started', {
-      port: process.env.PORT ?? '3001',
+      port: process.env.PORT ?? '3003',
     })
   },
 )
