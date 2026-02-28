@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { ipponCreateWallet, ipponSendAll } from '@/lib/api'
+import { getDecodedToken } from '@cashu/cashu-ts'
+import { swapToken } from '@/lib/api'
 import type { RecoveryAttempt } from '@/lib/types'
 import clsx from 'clsx'
 
@@ -18,6 +19,7 @@ const RecoveryResult = ({ attempt, onRetry }: RecoveryResultProps) => {
   const [tokenCopied, setTokenCopied] = useState(false)
   const [swapping, setSwapping] = useState(false)
   const [swapError, setSwapError] = useState<string | null>(null)
+  const [swapDone, setSwapDone] = useState<{ from: number; to: number } | null>(null)
 
   async function copyToClipboard(text: string, setFlag: (v: boolean) => void) {
     try {
@@ -34,8 +36,9 @@ const RecoveryResult = ({ attempt, onRetry }: RecoveryResultProps) => {
     setSwapping(true)
     setSwapError(null)
     try {
-      const { access_key } = await ipponCreateWallet(displayToken)
-      const { token: optimized } = await ipponSendAll(access_key)
+      const { token: optimized } = await swapToken(displayToken, attempt.jobId)
+      const newProofCount = getDecodedToken(optimized).proofs.length
+      setSwapDone({ from: result!.proofs, to: newProofCount })
       setDisplayToken(optimized)
     } catch (e) {
       setSwapError((e as Error).message)
@@ -56,7 +59,7 @@ const RecoveryResult = ({ attempt, onRetry }: RecoveryResultProps) => {
         <p className="mt-1 font-ibm-plex-mono text-xs text-gray-400">{attempt.mintUrl}</p>
         <button
           onClick={onRetry}
-          className="mt-4 bg-black px-4 py-2 font-ibm-plex-mono text-sm font-semibold text-white transition hover:bg-gray-800"
+          className="mt-4 rounded bg-black px-4 py-2 font-ibm-plex-mono text-sm font-semibold text-white transition hover:bg-gray-800"
         >
           TRY AGAIN
         </button>
@@ -146,18 +149,26 @@ const RecoveryResult = ({ attempt, onRetry }: RecoveryResultProps) => {
           {/* Swap to optimal denominations */}
           {result.proofs > RECOMMENDED_SWAP_LIMIT && (
             <div className="mb-4">
-              <button
-                onClick={handleSwap}
-                disabled={swapping}
-                className="w-full bg-black px-4 py-3 font-ibm-plex-mono text-sm font-semibold text-white transition hover:bg-gray-800 disabled:opacity-60"
-              >
-                {swapping ? 'SWAPPING…' : 'SWAP TO OPTIMAL DENOMINATIONS'}
-              </button>
-              <p className="mt-1 font-ibm-plex-mono text-xs text-gray-400">
-                {result.proofs} proofs recovered — swapping consolidates them into fewer, optimal ecash notes.
-              </p>
-              {swapError && (
-                <p className="mt-2 font-ibm-plex-mono text-xs text-red-500">{swapError}</p>
+              {swapDone ? (
+                <p className="font-ibm-plex-mono text-xs text-green-600">
+                  ✓ Proofs consolidated from {swapDone.from} to {swapDone.to}
+                </p>
+              ) : (
+                <>
+                  <button
+                    onClick={handleSwap}
+                    disabled={swapping}
+                    className="w-full rounded bg-black px-4 py-3 font-ibm-plex-mono text-sm font-semibold text-white transition hover:bg-gray-800 disabled:opacity-60"
+                  >
+                    {swapping ? 'SWAPPING…' : 'SWAP TO OPTIMAL DENOMINATIONS'}
+                  </button>
+                  <p className="mt-1 font-ibm-plex-mono text-xs text-gray-400">
+                    {result.proofs} proofs recovered — swapping consolidates them into fewer, optimal ecash notes.
+                  </p>
+                  {swapError && (
+                    <p className="mt-2 font-ibm-plex-mono text-xs text-red-500">{swapError}</p>
+                  )}
+                </>
               )}
             </div>
           )}
@@ -166,7 +177,7 @@ const RecoveryResult = ({ attempt, onRetry }: RecoveryResultProps) => {
 
       <button
         onClick={onRetry}
-        className="w-full border border-gray-300 px-4 py-2 font-ibm-plex-mono text-sm text-gray-600 transition hover:border-gray-400 hover:text-gray-800"
+        className="w-full rounded border border-gray-300 px-4 py-2 font-ibm-plex-mono text-sm text-gray-600 transition hover:border-gray-400 hover:text-gray-800"
       >
         CONTINUE OR CHANGE SETTINGS
       </button>

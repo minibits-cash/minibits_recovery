@@ -8,6 +8,7 @@ import cors from '@fastify/cors'
 import rateLimit from '@fastify/rate-limit'
 import AppError from './utils/AppError'
 import recoveryRoutes from './routes/recovery'
+import swapRoutes from './routes/swap'
 
 export async function buildApp(): Promise<FastifyInstance> {
   const app: FastifyInstance = Fastify({
@@ -46,6 +47,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   app.get('/health', async () => ({ status: 'ok' }))
 
   await app.register(recoveryRoutes, { prefix: '/api/recovery' })
+  await app.register(swapRoutes, { prefix: '/api/swap' })
 
   return app
 }

@@ -250,7 +250,10 @@ export default function RecoveryFlow() {
                   <KeysetSelect
                     mintUrl={mintUrl}
                     selectedKeysetId={selectedKeyset?.id ?? null}
-                    onKeysetChange={setSelectedKeyset}
+                    onKeysetChange={(keyset) => {
+                      setSelectedKeyset(keyset)
+                      setStartCounter(0)
+                    }}
                   />
 
                   <div>
@@ -290,7 +293,7 @@ export default function RecoveryFlow() {
             <button
               onClick={handleStartRecovery}
               disabled={!canSubmit || isGenerating}
-              className="flex w-full items-center justify-center gap-3 bg-black px-6 py-4 font-ibm-plex-mono text-base font-semibold text-white transition duration-300 hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-3 rounded bg-black px-6 py-4 font-ibm-plex-mono text-base font-semibold text-white transition duration-300 hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isGenerating && (
                 <svg

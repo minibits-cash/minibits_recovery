@@ -8,7 +8,7 @@ interface IpponWallet {
   access_key: string
   mint: string
   unit: string
-  balance?: number
+  balance: number
   pending_balance?: number
   limits?: {
     max_balance?: number | null
@@ -60,6 +60,19 @@ export async function createWallet(name?: string): Promise<IpponWallet> {
   return wallet
 }
 
+/** Create a temporary wallet and immediately receive the provided token into it. */
+export async function createWalletAndReceive(token: string, jobId?: string): Promise<IpponWallet> {
+  const name = jobId ? `minibits-recovery-swap-${jobId}` : 'minibits-recovery-swap'
+  log.info('[ipponService] Creating wallet with token', { name })
+  const res = await ipponFetch('/wallet', {
+    method: 'POST',
+    body: JSON.stringify({ name, token }),
+  })
+  const wallet: IpponWallet = await res.json()
+  log.debug('[ipponService] Wallet created and token received', { walletName: wallet.name })
+  return wallet
+}
+
 export async function receiveToken(accessKey: string, token: string): Promise<{ balance: number }> {
   log.info('[ipponService] Receiving token into wallet', {token})
   const res = await ipponFetch(
@@ -77,11 +90,11 @@ export async function getWalletInfo(accessKey: string): Promise<IpponWalletInfo>
   return res.json()
 }
 
-export async function sendAll(accessKey: string): Promise<{ token: string }> {
-  log.info('[ipponService] Sweeping wallet to token')
+export async function sendAll(accessKey: string, amount: number, unit: string): Promise<{ token: string }> {
+  log.info('[ipponService] Sweeping wallet to token', { amount, unit })
   const res = await ipponFetch(
     '/wallet/send',
-    { method: 'POST', body: JSON.stringify({}) },
+    { method: 'POST', body: JSON.stringify({ amount, unit }) },
     accessKey,
   )
   const data: { token: string } = await res.json()

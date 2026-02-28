@@ -68,25 +68,7 @@ export async function pollRecovery(jobId: string): Promise<PollResponse> {
   return apiFetch(`/api/recovery/${jobId}`)
 }
 
-const IPPON_BASE =
-  process.env.NEXT_PUBLIC_IPPON_BASE ?? 'https://ippon.minibits.cash/v1'
-
-async function ipponFetch<T>(path: string, init?: RequestInit, accessKey?: string): Promise<T> {
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-  if (accessKey) headers['Authorization'] = `Bearer ${accessKey}`
-  const res = await fetch(`${IPPON_BASE}${path}`, { ...init, headers })
-  if (!res.ok) {
-    const body = await res.text()
-    throw new Error(`Ippon error ${res.status}: ${body}`)
-  }
-  return res.json() as Promise<T>
-}
-
-/** Create a wallet and immediately receive the provided token into it. */
-export async function ipponCreateWallet(token: string): Promise<{ name: string; access_key: string }> {
-  return ipponFetch('/wallet', { method: 'POST', body: JSON.stringify({ name: 'minibits-recovery', token }) })
-}
-
-export async function ipponSendAll(accessKey: string): Promise<{ token: string }> {
-  return ipponFetch('/wallet/send', { method: 'POST', body: JSON.stringify({}) }, accessKey)
+/** Swap a token to optimal denominations via the backend proxy (avoids CORS). */
+export async function swapToken(token: string, jobId: string): Promise<{ token: string }> {
+  return apiFetch('/api/swap', { method: 'POST', body: JSON.stringify({ token, jobId }) })
 }

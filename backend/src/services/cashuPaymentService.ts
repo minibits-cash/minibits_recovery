@@ -44,6 +44,7 @@ export async function collectPayment(cashuHeader: string): Promise<void> {
     sourceMint: decoded.mint,
     collectionMint: COLLECTION_MINT,
   })
+  
   await interMintExchange(decoded.mint, decoded.proofs, collectionKey)
 }
 

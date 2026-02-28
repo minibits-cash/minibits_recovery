@@ -76,7 +76,7 @@ export default function PaymentFlow({
           type="button"
           onClick={() => setActiveOption('token')}
           className={clsx(
-            'flex-1 border px-3 py-2 font-ibm-plex-mono text-xs tracking-[-0.02em] transition',
+            'flex-1 rounded border px-3 py-2 font-ibm-plex-mono text-xs tracking-[-0.02em] transition',
             activeOption === 'token'
               ? 'border-amber-500 bg-amber-100 text-amber-800'
               : 'border-gray-300 bg-white text-gray-500 hover:border-gray-400',
@@ -88,7 +88,7 @@ export default function PaymentFlow({
           type="button"
           disabled
           title="Coming soon"
-          className="flex-1 cursor-not-allowed border border-gray-200 bg-gray-50 px-3 py-2 font-ibm-plex-mono text-xs tracking-[-0.02em] text-gray-400"
+          className="flex-1 rounded cursor-not-allowed border border-gray-200 bg-gray-50 px-3 py-2 font-ibm-plex-mono text-xs tracking-[-0.02em] text-gray-400"
         >
           PAY WITH LIGHTNING
         </button>
@@ -116,14 +116,14 @@ export default function PaymentFlow({
         <button
           onClick={validateAndPay}
           disabled={isPaying || !tokenValue.trim()}
-          className="flex-1 bg-black px-4 py-3 font-ibm-plex-mono text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex-1 rounded bg-black px-4 py-3 font-ibm-plex-mono text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isPaying ? 'PAYING…' : 'PAY'}
         </button>
         <button
           onClick={onCancel}
           disabled={isPaying}
-          className="flex-1 border border-gray-300 px-4 py-3 font-ibm-plex-mono text-sm text-gray-600 transition hover:border-gray-400 hover:text-gray-800 disabled:opacity-50"
+          className="flex-1 rounded border border-gray-300 px-4 py-3 font-ibm-plex-mono text-sm text-gray-600 transition hover:border-gray-400 hover:text-gray-800 disabled:opacity-50"
         >
           CANCEL
         </button>
