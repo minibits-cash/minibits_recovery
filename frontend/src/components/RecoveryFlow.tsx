@@ -279,7 +279,7 @@ export default function RecoveryFlow() {
                       )}
                     </div>
                     <p className="mt-1 font-ibm-plex-mono text-xs text-zinc-500">
-                      Start scanning from this counter value. Use 0 for a fresh recovery.
+                      Start scanning from this counter value. {parseInt(process.env.NEXT_PUBLIC_DEFAULT_BATCH_SIZE || '100') * parseInt(process.env.NEXT_PUBLIC_NUM_BATCHES || '50')} counters will be scanned, unless {process.env.NEXT_PUBLIC_DEFAULT_GAP_LIMIT} counters won't match any ecash proofs.
                     </p>
                   </div>
                 </div>
