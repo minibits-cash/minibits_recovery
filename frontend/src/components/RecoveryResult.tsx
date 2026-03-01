@@ -115,7 +115,7 @@ const RecoveryResult = ({ attempt, onRetry }: RecoveryResultProps) => {
       )}
 
       {result.exhausted && !result.lastFoundInLastBatch && (
-        <p className="mb-4 rounded border border-amber-800 bg-amber-950 p-3 font-ibm-plex-mono text-xs text-amber-400">
+        <p className="mb-4 rounded border border-amber-500 bg-[#1c1500] p-3 font-ibm-plex-mono text-xs text-amber-400">
           All provided batches were scanned without reaching the gap limit. If you believe more
           proofs exist, retry from counter <strong>{result.scannedToCounter + 1}</strong>.
         </p>

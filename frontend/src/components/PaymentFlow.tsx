@@ -55,7 +55,7 @@ export default function PaymentFlow({
   }
 
   return (
-    <div className="rounded-lg border border-amber-700 bg-amber-950 p-6">
+    <div className="rounded-lg border border-amber-500 bg-[#1c1500] p-6">
       <div className="mb-4">
         <span className="font-ibm-plex-mono text-[13px] tracking-[-0.02em] text-amber-400">
           PAYMENT REQUIRED
