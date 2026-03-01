@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="overflow-x-hidden bg-zinc-950">
       <Head>
-        <title>{`${PROJECT_NAME} — Recover Your Ecash Balance. Faster.`}</title>
+        <title>{`Recover Your Ecash Balance. Faster.`}</title>
         <meta
           name="description"
           content={`${PROJECT_NAME} mint ecash recovery tool that is optimized for performance. Your seed phrase never leaves your browser.`}
