@@ -74,8 +74,8 @@ const KeysetSelect = ({ mintUrl, selectedKeysetId, onKeysetChange }: KeysetSelec
 
   if (loading)
     return (
-      <div className="flex items-center gap-2 text-sm text-gray-400">
-        <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-[#f18805]" />
+      <div className="flex items-center gap-2 text-sm text-zinc-500">
+        <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-zinc-700 border-t-[#f18805]" />
         Loading keysets…
       </div>
     )
@@ -86,40 +86,40 @@ const KeysetSelect = ({ mintUrl, selectedKeysetId, onKeysetChange }: KeysetSelec
 
   return (
     <div>
-      <h3 className="ibm-plex-mono-medium mb-2 text-[13px] tracking-[-0.02em] text-[#6B7280]">
+      <h3 className="ibm-plex-mono-medium mb-2 text-[13px] tracking-[-0.02em] text-zinc-500">
         KEYSET
       </h3>
       <Listbox value={selectedKeyset} onChange={handleSelect}>
         <div className="relative">
-          <ListboxButton className="relative w-full cursor-pointer rounded border border-gray-300 bg-white py-2.5 pl-3 pr-10 text-left font-ibm-plex-mono text-sm text-gray-900 focus:border-[#f18805] focus:outline-none">
+          <ListboxButton className="relative w-full cursor-pointer rounded border border-zinc-700 bg-zinc-800 py-2.5 pl-3 pr-10 text-left font-ibm-plex-mono text-sm text-zinc-100 focus:border-[#f18805] focus:outline-none">
             {selectedKeyset ? (
               <span className="flex items-center gap-2">
                 <span
                   className={clsx(
                     'inline-block h-2 w-2 flex-shrink-0 rounded-full',
-                    selectedKeyset.active ? 'bg-green-500' : 'bg-gray-400',
+                    selectedKeyset.active ? 'bg-green-500' : 'bg-zinc-500',
                   )}
                 />
                 <span className="truncate">{selectedKeyset.id}</span>
-                <span className="ml-1 text-gray-400">({selectedKeyset.unit})</span>
+                <span className="ml-1 text-zinc-500">({selectedKeyset.unit})</span>
               </span>
             ) : (
-              <span className="text-gray-400">Select keyset…</span>
+              <span className="text-zinc-500">Select keyset…</span>
             )}
-            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
+            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-500">
               ▾
             </span>
           </ListboxButton>
 
-          <ListboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded border border-gray-200 bg-white py-1 shadow-lg focus:outline-none">
+          <ListboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded border border-zinc-700 bg-zinc-800 py-1 shadow-lg shadow-black/50 focus:outline-none">
             {keysets.map((keyset) => (
               <ListboxOption
                 key={keyset.id}
                 value={keyset}
                 className={({ focus }) =>
                   clsx(
-                    'cursor-pointer select-none px-3 py-2 font-ibm-plex-mono text-sm',
-                    focus ? 'bg-gray-100' : 'bg-white',
+                    'cursor-pointer select-none px-3 py-2 font-ibm-plex-mono text-sm text-zinc-100',
+                    focus ? 'bg-zinc-700' : 'bg-zinc-800',
                   )
                 }
               >
@@ -127,13 +127,13 @@ const KeysetSelect = ({ mintUrl, selectedKeysetId, onKeysetChange }: KeysetSelec
                   <span
                     className={clsx(
                       'inline-block h-2 w-2 flex-shrink-0 rounded-full',
-                      keyset.active ? 'bg-green-500' : 'bg-gray-400',
+                      keyset.active ? 'bg-green-500' : 'bg-zinc-500',
                     )}
                   />
                   <span className="truncate">{keyset.id}</span>
-                  <span className="text-gray-400">({keyset.unit})</span>
+                  <span className="text-zinc-500">({keyset.unit})</span>
                   {!keyset.active && (
-                    <span className="ml-auto text-xs text-gray-400">inactive</span>
+                    <span className="ml-auto text-xs text-zinc-500">inactive</span>
                   )}
                 </span>
               </ListboxOption>
@@ -142,7 +142,7 @@ const KeysetSelect = ({ mintUrl, selectedKeysetId, onKeysetChange }: KeysetSelec
         </div>
       </Listbox>
       {selectedKeyset && (
-        <p className="mt-1 font-ibm-plex-mono text-xs text-gray-400">
+        <p className="mt-1 font-ibm-plex-mono text-xs text-zinc-500">
           {selectedKeyset.active ? 'Active keyset' : 'Inactive keyset'} · {selectedKeyset.unit} ·{' '}
           {selectedKeyset.input_fee_ppk != null
             ? `Fee: ${selectedKeyset.input_fee_ppk} ppk`

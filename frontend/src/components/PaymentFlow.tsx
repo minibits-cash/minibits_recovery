@@ -55,19 +55,19 @@ export default function PaymentFlow({
   }
 
   return (
-    <div className="rounded-lg border border-amber-200 bg-amber-50 p-6 shadow-sm">
+    <div className="rounded-lg border border-amber-700 bg-amber-950 p-6">
       <div className="mb-4">
-        <span className="font-ibm-plex-mono text-[13px] tracking-[-0.02em] text-amber-700">
+        <span className="font-ibm-plex-mono text-[13px] tracking-[-0.02em] text-amber-400">
           PAYMENT REQUIRED
         </span>
       </div>
 
       <div className="mb-5">
-        <p className="karla-bold text-3xl text-gray-900">
+        <p className="karla-bold text-3xl text-zinc-100">
           {paymentRequired.amount}{' '}
-          <span className="text-xl font-normal text-gray-600">{paymentRequired.unit}</span>
+          <span className="text-xl font-normal text-zinc-400">{paymentRequired.unit}</span>
         </p>
-        <p className="mt-1 font-ibm-plex-mono text-xs text-amber-800">{paymentRequired.message}</p>
+        <p className="mt-1 font-ibm-plex-mono text-xs text-amber-300">{paymentRequired.message}</p>
       </div>
 
       {/* Payment option buttons */}
@@ -78,8 +78,8 @@ export default function PaymentFlow({
           className={clsx(
             'flex-1 rounded border px-3 py-2 font-ibm-plex-mono text-xs tracking-[-0.02em] transition',
             activeOption === 'token'
-              ? 'border-amber-500 bg-amber-100 text-amber-800'
-              : 'border-gray-300 bg-white text-gray-500 hover:border-gray-400',
+              ? 'border-amber-500 bg-amber-900 text-amber-300'
+              : 'border-zinc-700 bg-zinc-800 text-zinc-400 hover:border-zinc-600',
           )}
         >
           PASTE CASHU TOKEN
@@ -88,7 +88,7 @@ export default function PaymentFlow({
           type="button"
           disabled
           title="Coming soon"
-          className="flex-1 rounded cursor-not-allowed border border-gray-200 bg-gray-50 px-3 py-2 font-ibm-plex-mono text-xs tracking-[-0.02em] text-gray-400"
+          className="flex-1 rounded cursor-not-allowed border border-zinc-800 bg-zinc-900 px-3 py-2 font-ibm-plex-mono text-xs tracking-[-0.02em] text-zinc-600"
         >
           PAY WITH LIGHTNING
         </button>
@@ -104,10 +104,10 @@ export default function PaymentFlow({
             }}
             placeholder="Paste your cashu token here (cashuB…)"
             rows={4}
-            className="w-full resize-none rounded border border-gray-300 bg-white p-3 font-ibm-plex-mono text-xs text-gray-800 placeholder-gray-400 focus:border-amber-400 focus:outline-none"
+            className="w-full resize-none rounded border border-zinc-700 bg-zinc-800 p-3 font-ibm-plex-mono text-xs text-zinc-100 placeholder-zinc-600 focus:border-amber-500 focus:outline-none"
           />
           {validationError && (
-            <p className="mt-1 font-ibm-plex-mono text-xs text-red-500">{validationError}</p>
+            <p className="mt-1 font-ibm-plex-mono text-xs text-red-400">{validationError}</p>
           )}
         </div>
       )}
@@ -116,14 +116,14 @@ export default function PaymentFlow({
         <button
           onClick={validateAndPay}
           disabled={isPaying || !tokenValue.trim()}
-          className="flex-1 rounded bg-black px-4 py-3 font-ibm-plex-mono text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex-1 rounded bg-zinc-100 px-4 py-3 font-ibm-plex-mono text-sm font-semibold text-zinc-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isPaying ? 'PAYING…' : 'PAY'}
         </button>
         <button
           onClick={onCancel}
           disabled={isPaying}
-          className="flex-1 rounded border border-gray-300 px-4 py-3 font-ibm-plex-mono text-sm text-gray-600 transition hover:border-gray-400 hover:text-gray-800 disabled:opacity-50"
+          className="flex-1 rounded border border-zinc-700 px-4 py-3 font-ibm-plex-mono text-sm text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200 disabled:opacity-50"
         >
           CANCEL
         </button>

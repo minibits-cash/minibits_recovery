@@ -42,7 +42,7 @@ const MintCard = ({ mintUrl, onMintUrlChange }: MintCardProps) => {
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+    <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-6">
       {/*<h3 className="ibm-plex-mono-medium mb-4 text-[13px] tracking-[-0.02em] text-[#6B7280]">
         MINT
       </h3>*/}
@@ -78,8 +78,8 @@ const MintCard = ({ mintUrl, onMintUrlChange }: MintCardProps) => {
 
       {/* Mint info display */}
       {loading && (
-        <div className="flex items-center gap-2 text-sm text-gray-400">
-          <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-[#f18805]" />
+        <div className="flex items-center gap-2 text-sm text-zinc-500">
+          <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-zinc-700 border-t-[#f18805]" />
           Loading mint info…
         </div>
       )}
@@ -94,15 +94,15 @@ const MintCard = ({ mintUrl, onMintUrlChange }: MintCardProps) => {
               src={new URL(info.icon_url, mintUrl).href}
               alt={info.name}
               referrerPolicy="no-referrer"
-              className="h-12 w-12 flex-shrink-0 rounded-full border border-gray-200 object-cover"
+              className="h-12 w-12 flex-shrink-0 rounded-full border border-zinc-700 object-cover"
             />
           )}
           <div>
-            <p className="karla-bold text-lg text-gray-900">{info.name}</p>
+            <p className="karla-bold text-lg text-zinc-100">{info.name}</p>
             {info.description && (
-              <p className="karla-regular mt-0.5 text-sm text-gray-500">{info.description}</p>
+              <p className="karla-regular mt-0.5 text-sm text-zinc-400">{info.description}</p>
             )}
-            <p className="mt-1 font-ibm-plex-mono text-xs text-gray-400">{mintUrl}</p>
+            <p className="mt-1 font-ibm-plex-mono text-xs text-zinc-500">{mintUrl}</p>
           </div>
         </div>
       )}

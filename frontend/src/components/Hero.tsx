@@ -65,12 +65,12 @@ const Hero = () => {
 
           {/* Bottom fade */}
           <div
-            className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent"
+            className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-zinc-950 to-transparent"
           />
 
           <div className="relative z-10 flex flex-col items-center px-8 pb-16 pt-10 sm:px-12 lg:flex-row lg:px-16">
             <div className="flex flex-col lg:max-w-[70%]">
-              <h1 className="mb-4 text-5xl font-bold sm:text-6xl">
+              <h1 className="mb-4 text-5xl font-bold text-zinc-100 sm:text-6xl">
                 <div className="md:flex md:flex-col">
                   <span className="block md:inline">
                     Recover your balance<span style={{ color: '#3680FA' }}>.</span>
@@ -80,7 +80,7 @@ const Hero = () => {
                   </span>
                 </div>
               </h1>
-              <p className="mb-8 max-w-2xl font-ibm-plex-mono text-xl font-normal text-gray-900">
+              <p className="mb-8 max-w-2xl font-ibm-plex-mono text-xl font-normal text-zinc-300">
               Ecash recovery tool for {PROJECT_NAME} mint, that is optimized for performance. Your seed phrase never leaves your browser.
               </p>
               {/*<div className="flex flex-wrap gap-4">

@@ -8,7 +8,7 @@ const PROJECT_NAME = process.env.NEXT_PUBLIC_PROJECT_NAME ?? 'Minibits'
 
 export default function Home() {
   return (
-    <div className="overflow-x-hidden bg-white">
+    <div className="overflow-x-hidden bg-zinc-950">
       <Head>
         <title>{`${PROJECT_NAME} — Recover Your Ecash Balance. Faster.`}</title>
         <meta

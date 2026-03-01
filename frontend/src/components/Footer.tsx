@@ -6,7 +6,7 @@ const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME ?? 'recovery'
 
 const Footer = () => {
   return (
-    <footer className="mb-8 bg-white py-8">
+    <footer className="mb-8 bg-zinc-950 py-8">
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center text-center">
           <div className="mb-4 flex items-center gap-2">
@@ -21,14 +21,14 @@ const Footer = () => {
                 className="rounded-md"
               />
             )*/}
-            <span className="text-lg font-bold leading-none text-gray-900">
+            <span className="text-lg font-bold leading-none text-zinc-100">
               {PROJECT_NAME}<span className="text-[#f18805]">.</span>{APP_NAME}
             </span>
           </div>
-          <p className="mb-2 font-ibm-plex-mono text-sm font-normal text-gray-500">
+          <p className="mb-2 font-ibm-plex-mono text-sm font-normal text-zinc-500">
             Ecash recovery tool for {PROJECT_NAME} mint, that is optimized for performance.
           </p>
-          <p className="karla-regular mb-6 text-sm text-neutral-900">
+          <p className="karla-regular mb-6 text-sm text-zinc-500">
             © {new Date().getFullYear()} {PROJECT_NAME}. We do not bother you with cookies.
           </p>
           <div className="flex space-x-4">
@@ -36,7 +36,7 @@ const Footer = () => {
               href="https://github.com/minibits-cash"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 transition-colors duration-300 hover:text-[#f18805]"
+              className="text-zinc-600 transition-colors duration-300 hover:text-[#f18805]"
               aria-label="GitHub"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">

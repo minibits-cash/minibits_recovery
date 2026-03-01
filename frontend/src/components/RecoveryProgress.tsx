@@ -51,22 +51,22 @@ const RecoveryProgress = ({ jobId, mintUrl, onComplete }: RecoveryProgressProps)
   }, [jobId, onComplete])
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
+    <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-8">
       <div className="flex flex-col items-center text-center">
         {/* Spinner */}
-        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border-4 border-gray-100 border-t-[#f18805] animate-spin" />
+        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border-4 border-zinc-700 border-t-[#f18805] animate-spin" />
 
-        <h3 className="karla-bold mb-2 text-xl text-gray-900">Recovery in progress{dots}</h3>
-        <p className="karla-regular mb-1 text-sm text-gray-500">
+        <h3 className="karla-bold mb-2 text-xl text-zinc-100">Recovery in progress{dots}</h3>
+        <p className="karla-regular mb-1 text-sm text-zinc-400">
           Contacting mint and scanning for proofs
         </p>
-        <p className="font-ibm-plex-mono text-xs text-gray-400">{mintUrl}</p>
+        <p className="font-ibm-plex-mono text-xs text-zinc-500">{mintUrl}</p>
 
-        <div className="mt-6 rounded bg-gray-50 px-6 py-3 font-ibm-plex-mono text-sm text-gray-600">
+        <div className="mt-6 rounded bg-zinc-800 px-6 py-3 font-ibm-plex-mono text-sm text-zinc-300">
           Elapsed: {elapsed}s
         </div>
 
-        <p className="mt-4 font-ibm-plex-mono text-xs text-gray-400">
+        <p className="mt-4 font-ibm-plex-mono text-xs text-zinc-500">
           This may take up to a minute for large wallets.
         </p>
       </div>

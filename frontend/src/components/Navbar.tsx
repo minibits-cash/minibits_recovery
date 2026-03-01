@@ -6,7 +6,7 @@ const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME ?? 'recovery'
 
 const Navbar = () => {
   return (
-    <div className="fixed left-0 right-0 top-0 z-50 bg-white shadow-sm">
+    <div className="fixed left-0 right-0 top-0 z-50 border-b border-zinc-800 bg-zinc-900">
       <nav className="mx-auto flex max-w-[1152px] items-center justify-between px-8 py-5 xl:px-0">
         {/* Logo + wordmark */}
         <div className="flex items-center gap-3">
@@ -21,7 +21,7 @@ const Navbar = () => {
               className="rounded-md"
             />
           )}
-          <span className="text-[24px] font-bold leading-none text-gray-900">
+          <span className="text-[24px] font-bold leading-none text-zinc-100">
             {PROJECT_NAME}<span className="text-[#599D52]">.</span>{APP_NAME}
           </span>
         </div>

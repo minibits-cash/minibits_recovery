@@ -230,23 +230,23 @@ export default function RecoveryFlow() {
             <MintCard mintUrl={mintUrl} onMintUrlChange={setMintUrl} />
 
             {/* 3. Seed */}
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-6">
               <SeedInput value={seed} onChange={setSeed} />
             </div>
 
             {/* Advanced section: Keyset + Counter */}
-            <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+            <div className="rounded-lg border border-zinc-700 bg-zinc-900">
               <button
                 type="button"
                 onClick={() => setShowAdvanced((v) => !v)}
-                className="flex w-full items-center justify-between px-6 py-4 font-ibm-plex-mono text-[13px] tracking-[-0.02em] text-[#6B7280]"
+                className="flex w-full items-center justify-between px-6 py-4 font-ibm-plex-mono text-[13px] tracking-[-0.02em] text-zinc-500"
               >
                 <span>ADVANCED</span>
-                <span className="text-gray-400">{showAdvanced ? '▲' : '▼'}</span>
+                <span className="text-zinc-600">{showAdvanced ? '▲' : '▼'}</span>
               </button>
 
               {/* Always mounted so it fetches + auto-selects on load; hidden until Advanced is opened */}
-              <div className={showAdvanced ? 'flex flex-col gap-4 border-t border-gray-100 px-6 pb-6 pt-4' : 'hidden'}>
+              <div className={showAdvanced ? 'flex flex-col gap-4 border-t border-zinc-800 px-6 pb-6 pt-4' : 'hidden'}>
                   <KeysetSelect
                     mintUrl={mintUrl}
                     selectedKeysetId={selectedKeyset?.id ?? null}
@@ -257,7 +257,7 @@ export default function RecoveryFlow() {
                   />
 
                   <div>
-                    <h3 className="ibm-plex-mono-medium mb-2 text-[13px] tracking-[-0.02em] text-[#6B7280]">
+                    <h3 className="ibm-plex-mono-medium mb-2 text-[13px] tracking-[-0.02em] text-zinc-500">
                       STARTING COUNTER
                     </h3>
                     <div className="flex items-center gap-3">
@@ -267,18 +267,18 @@ export default function RecoveryFlow() {
                         step={DEFAULT_BATCH_SIZE}
                         value={startCounter}
                         onChange={(e) => setStartCounter(Math.max(0, parseInt(e.target.value) || 0))}
-                        className="w-32 rounded border border-gray-300 px-3 py-2 font-ibm-plex-mono text-sm text-gray-900 focus:border-[#f18805] focus:outline-none"
+                        className="w-32 rounded border border-zinc-700 bg-zinc-800 px-3 py-2 font-ibm-plex-mono text-sm text-zinc-100 focus:border-[#f18805] focus:outline-none"
                       />
                       {startCounter > 0 && (
                         <button
                           onClick={() => setStartCounter(0)}
-                          className="font-ibm-plex-mono text-xs text-gray-400 underline"
+                          className="font-ibm-plex-mono text-xs text-zinc-500 underline"
                         >
                           reset to 0
                         </button>
                       )}
                     </div>
-                    <p className="mt-1 font-ibm-plex-mono text-xs text-gray-400">
+                    <p className="mt-1 font-ibm-plex-mono text-xs text-zinc-500">
                       Start scanning from this counter value. Use 0 for a fresh recovery.
                     </p>
                   </div>
@@ -287,13 +287,13 @@ export default function RecoveryFlow() {
 
             {/* Submit */}
             {submitError && (
-              <p className="font-ibm-plex-mono text-sm text-red-500">{submitError}</p>
+              <p className="font-ibm-plex-mono text-sm text-red-400">{submitError}</p>
             )}
 
             <button
               onClick={handleStartRecovery}
               disabled={!canSubmit || isGenerating}
-              className="flex w-full items-center justify-center gap-3 rounded bg-black px-6 py-4 font-ibm-plex-mono text-base font-semibold text-white transition duration-300 hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-3 rounded bg-zinc-100 px-6 py-4 font-ibm-plex-mono text-base font-semibold text-zinc-900 transition duration-300 hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
             >
               {isGenerating && (
                 <svg
@@ -310,7 +310,7 @@ export default function RecoveryFlow() {
             </button>
 
             {!selectedKeyset && (
-              <p className="font-ibm-plex-mono text-xs text-gray-400">
+              <p className="font-ibm-plex-mono text-xs text-zinc-500">
                 Select a mint and keyset above to enable recovery.
               </p>
             )}
@@ -339,8 +339,8 @@ export default function RecoveryFlow() {
 
             {/* Historical results, newest first */}
             {attempts.length === 0 && !activeJobId && !paymentRequired && (
-              <div className="flex h-48 items-center justify-center rounded-lg border border-dashed border-gray-200">
-                <p className="font-ibm-plex-mono text-sm text-gray-400">
+              <div className="flex h-48 items-center justify-center rounded-lg border border-dashed border-zinc-800">
+                <p className="font-ibm-plex-mono text-sm text-zinc-600">
                   Recovery results will appear here
                 </p>
               </div>
