@@ -21,7 +21,7 @@ const Footer = () => {
                 className="rounded-md"
               />
             )*/}
-            <span className="text-lg font-bold leading-none text-zinc-100">
+            <span className="leading-none text-zinc-100" style={{ fontFamily: '"Hammersmith One", sans-serif', fontSize: '18px' }}>
               {PROJECT_NAME}<span className="text-[#f18805]">.</span>{APP_NAME}
             </span>
           </div>

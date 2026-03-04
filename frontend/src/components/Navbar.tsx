@@ -21,7 +21,7 @@ const Navbar = () => {
               className="rounded-md"
             />
           )}
-          <span className="text-[24px] font-bold leading-none text-zinc-100">
+          <span className="leading-none text-zinc-100" style={{ fontFamily: '"Hammersmith One", sans-serif', fontSize: '28px' }}>
             {PROJECT_NAME}<span className="text-[#599D52]">.</span>{APP_NAME}
           </span>
         </div>

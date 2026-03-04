@@ -10,7 +10,7 @@ const Hero = () => {
     if (!textOverlay) return
 
     const cells = textOverlay.children
-    const plainText = 'RESTORE CASHU ECASH SEED RECOVER PROOF'
+    const plainText = 'RECOVER YOUR BALANCE FASTER'
     const encryptedChars = '!@#$%^&*()_+-=[]{}|;:,.<>?'
 
     function getRandomChar(isEncrypted: boolean): string {
@@ -80,7 +80,7 @@ const Hero = () => {
                   </span>
                 </div>
               </h1>
-              <p className="mb-8 max-w-2xl font-ibm-plex-mono text-xl font-normal text-zinc-300">
+              <p className="mb-8 max-w-2xl text-xl font-normal text-zinc-300">
               Ecash recovery tool for {PROJECT_NAME} mint, that is optimized for performance. Your seed phrase never leaves your browser.
               </p>
               {/*<div className="flex flex-wrap gap-4">
