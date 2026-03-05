@@ -15,7 +15,7 @@ export default function Home() {
           name="description"
           content={`${PROJECT_NAME} mint ecash recovery tool that is optimized for performance. Your seed phrase never leaves your browser.`}
         />
-        <link rel="icon" href="/minibits_icon-32.ico" />
+        <link rel="icon" href="/favicon_64.ico" />
       </Head>
 
       <Navbar />
