@@ -70,7 +70,7 @@ const Hero = () => {
 
           <div className="relative z-10 flex flex-col items-center px-8 pb-16 pt-10 sm:px-12 lg:flex-row lg:px-16">
             <div className="flex flex-col lg:max-w-[70%]">
-              <h1 className="mb-4 text-5xl font-bold text-zinc-100 sm:text-6xl">
+              <h1 className="mb-4 text-5xl font-bold text-zinc-100 sm:text-6xl" style={{ fontFamily: '"Hammersmith One", sans-serif' }}>
                 <div className="md:flex md:flex-col">
                   <span className="block md:inline">
                     Recover your balance<span style={{ color: '#3680FA' }}>.</span>
